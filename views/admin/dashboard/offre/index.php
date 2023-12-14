@@ -118,8 +118,8 @@ require_once('../../../../models/job.php');
             </nav>
 
             <section class="Agents px-4">
-                <div class="col-sm-6">
-                    <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i
+                <div class="col-sm-6 ">
+                    <a href="#addEmployeeModal" class="btn btn-secondary" data-toggle="modal"><i
                             class="material-icons">&#xE147;</i> <span>Ajouter une offre</span></a>
                 </div>
 
@@ -145,10 +145,9 @@ require_once('../../../../models/job.php');
                             <tr class="freelancer">
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt=""
-                                            style="width: 45px; height: 45px" class="rounded-circle" />
+                                       
                                         <div class="ms-3">
-                                            <p class="fw-bold mb-1 f_name">
+                                            <p class="fw-bold mb-1 f_title">
                                                 <?php echo $offre['title']; ?>
                                             </p>
                                         </div>
@@ -184,8 +183,8 @@ require_once('../../../../models/job.php');
                                     </p>
                                 </td>
                                 <td>
-                                    <a ><img class="delet_user" src="../img/user-x.svg" alt=""></a>
-                                    <a href="edit.php?id=<?php echo$offre['job_id']; ?>"><img class="ms-2 edit" src="../img/edit.svg" alt=""></a>
+                                   <a href="delete.php?id=<?php echo$offre['job_id']; ?>"><img class="delet_user" src="../img/user-x.svg" alt=""></a>
+                                   <a href="edit.php?id=<?php echo$offre['job_id']; ?>"><img class="ms-2 edit" src="../img/edit.svg" alt=""></a>
                                 </td>
                             </tr>
                             <?php
@@ -206,7 +205,7 @@ require_once('../../../../models/job.php');
     <div id="addEmployeeModal" class="modal">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
-				<form id="employeeForm" method="post" action="add.php">
+				<form id="employeeForm" method="post" action="add.php" enctype="multipart/form-data">
 					<div class="modal-header">
 						<h4 class="modal-title">Add Offre</h4>
 						<button type="button" class="close"  data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -214,28 +213,33 @@ require_once('../../../../models/job.php');
 					<div class="modal-body">
 						<div class="form-group">
 							<label>Title</label>
-							<input type="text" class="form-control" name="title" required>
+							<input type="text" class="form-control" name="title" >
 						</div>
 						<div class="form-group">
 							<label>Description</label>
-							<input type="text" class="form-control" name="description" required>
+							<input type="text" class="form-control" name="description" >
 						</div>
                         <div class="form-group">
 							<label>Company</label>
-							<input type="text" class="form-control" name="company" required>
+							<input type="text" class="form-control" name="company" >
 						</div>
                         <div class="form-group">
 							<label>Location</label>
-							<input type="text" class="form-control" name="location" required>
+							<input type="text" class="form-control" name="location" >
 						</div>
                         <div class="form-group">
 							<label>Status</label>
-							<input type="text" class="form-control" name="status" required>
+							<input type="text" class="form-control" name="status" >
 						</div>
                         <div class="form-group">
 							<label>Date de création</label>
-							<input type="date" class="form-control" name="date_created" required>
+							<input type="date" class="form-control" name="date_created" >
 						</div>
+                        <div class="form-group">
+							<label>Image </label>
+							<input type="file" class="form-control" name="image_path" >
+						</div>
+
 
 					</div>
 					<div class="modal-footer">
@@ -250,8 +254,7 @@ require_once('../../../../models/job.php');
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <script src="../dashboard.js"></script>
-    <script src="../agents.js"></script>
+    
 </body>
 
 </html>

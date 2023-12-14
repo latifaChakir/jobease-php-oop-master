@@ -69,6 +69,7 @@ public function insertUser() {
 
   public function loginUser($password)
 {
+  session_start();
     $fetch_user_query = "SELECT * FROM users WHERE username = ?";
     $req = $this->conn->prepare($fetch_user_query);
     $req->bind_param("s", $this->username);
@@ -77,9 +78,11 @@ public function insertUser() {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
+        $_SESSION['id'] = $user['id'];
         $hashedPassword = $user['password'];
 
         if (password_verify($password, $hashedPassword)) {
+          
             if ($user['role_name'] == 'admin') {
                 header('Location: ../admin/dashboard/dashboard.php');
                 exit();

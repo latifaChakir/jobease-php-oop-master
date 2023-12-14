@@ -1,3 +1,9 @@
+<?php
+
+require_once('../../candidat/job/postuler.php');
+include_once('../../../database/connection.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,160 +116,38 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php
+                        $offreQuery = new Candidature($conn);
+                        $allOffres = $offreQuery->getOffresPostuler();
+
+                        foreach ($allOffres as $offre) {
+                            ?>
                         <tr class="freelancer">
                             <td>
                                 <div class="d-flex align-items-center">
                                     
                                     <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
+                                        <p class="fw-bold mb-1 f_name"><?php echo $offre['username']; ?></p>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <p class="fw-normal mb-1 f_title">I need someone for InDesign work on a semi-regular basis. Must be proficient in Indesign and page layout. Must be detail-oriented and highly organized. Fast turnaround times are a must and need to work during USA EST business hours.</p>
+                                <p class="fw-normal mb-1 f_title"><?php echo $offre['description']; ?></p>
 
                             </td>
                             <td>
-                                <a href="#" class="f_status">Adobe InDesign Brochure Design Graphic Design PDF Photoshop</a>
+                                <a href="#" class="f_status"><?php echo $offre['title']; ?></a>
                             </td>
-                            <td class="f_position">Inactif</td>
+                            <td class="f_position"><?php echo $offre['candidature_status']; ?></td>
+                            
                             <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
+                                <a href=""><img class="accept_task w-50" src="img/journal-check.svg" alt="icon" ></a>
+                                <a href=""><img class="delet_user w-50" src="img/journal-x.svg" alt="icon"></a>
                             </td>
                         </tr>
-                        <tr class="freelancer">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    
-                                    <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="fw-normal mb-1 f_title">I need someone for InDesign work on a semi-regular basis. Must be proficient in Indesign and page layout. Must be detail-oriented and highly organized. Fast turnaround times are a must and need to work during USA EST business hours.                                </p>
-
-                            </td>
-                            <td>
-                                <a href="#" class="f_status">Adobe InDesign Graphic Design Brochure Design Photoshop PDF</a>
-                            </td>
-                            <td class="f_position">Actif</td>
-                            <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
-                            </td>
-                        </tr>
-                        <tr class="freelancer">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    
-                                    <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="fw-normal mb-1 f_title">I am looking for a metadata expert who can optimize the metadata for my project.</p>
-
-                            </td>
-                            <td>
-                                <a href="#" class="f_status">Ghostwriting Reviews Search Engine Marketing</a>
-                            </td>
-                            <td class="f_position">Inactif</td>
-                            <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
-                            </td>
-                        </tr>
-                        <tr class="freelancer">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    
-                                    <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="fw-normal mb-1 f_title">I am looking for a freelancer to help me with an AI project it’s very small and I need it in 5 hours.                                </p>
-
-                            </td>
-                            <td>
-                                <a href="#" class="f_status">Python Mathematics</a>
-                            </td>
-                            <td class="f_position">Actif</td>
-                            <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
-                            </td>
-                        </tr>
-                        <tr class="freelancer">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    
-                                    <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="fw-normal mb-1 f_title">I am looking for a photo editor who can assist me with my project. The specific edits that I require for my photos are color correction. I have more than 20 photos that need editing, and I am looking for a quick turnaround time of within 24 hours.</p>
-
-                            </td>
-                            <td>
-                                <a href="#" class="f_status">Photoshop Photo Editing Photoshop Design Photography Graphic Design </a>
-                            </td>
-                            <td class="f_position">Inactif</td>
-                            <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
-                            </td>
-                        </tr>
-                        <tr class="freelancer">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    
-                                    <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="fw-normal mb-1 f_title">I need someone for InDesign work on a semi-regular basis. Must be proficient in Indesign and page layout. Must be detail-oriented and highly organized. Fast turnaround times are a must and need to work during USA EST business hours.</p>
-
-                            </td>
-                            <td>
-                                <a href="#" class="f_status">Adobe InDesign Brochure Design Graphic Design PDF Photoshop</a>
-                            </td>
-                            <td class="f_position">Actif</td>
-                            <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
-                            </td>
-                        </tr>
-                        <tr class="freelancer">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    
-                                    <div class="ms-3">
-                                        <p class="fw-bold mb-1 f_name">John Doe</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="fw-normal mb-1 f_title">I need someone for InDesign work on a semi-regular basis. Must be proficient in Indesign and page layout. Must be detail-oriented and highly organized. Fast turnaround times are a must and need to work during USA EST business hours.</p>
-
-                            </td>
-                            <td>
-                                <a href="#" class="f_status">Adobe InDesign Brochure Design Graphic Design PDF Photoshop</a>
-                            </td>
-                            <td class="f_position">Actif</td>
-                            <td class="">
-                                <img class="accept_task w-50" src="img/journal-check.svg" alt="icon" >
-                                <img class="delet_user w-50" src="img/journal-x.svg" alt="icon">
-                            </td>
-                        </tr>
+                        <?php 
+                        }?>
+                      
                     </tbody>
                 </table>
 

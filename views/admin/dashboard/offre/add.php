@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $location = $_POST['location'];
         $status= $_POST['status'];
         $date_created= $_POST['date_created'];
+        $image_path= $_POST['image_path'];
         $nouvelUtilisateur = new Job($conn);
         $nouvelUtilisateur->setTitle($title);
         $nouvelUtilisateur->setDescription($description);
@@ -18,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nouvelUtilisateur->setLocation($location);
         $nouvelUtilisateur->setStatus($status);
         $nouvelUtilisateur->setDateCreated($date_created);
+        $nouvelUtilisateur->setImagePath($image_path);
 
         $nouvelUtilisateur->sauvegarder();
         header('Location:index.php');

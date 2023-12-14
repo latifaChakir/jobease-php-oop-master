@@ -1,5 +1,6 @@
 <?php 
 
+
 class Job{
    private $conn;
    private $id;
@@ -10,6 +11,7 @@ class Job{
    private $status;
    private $date_created;
    private $image_path;
+   private $image_name;
    
    public function __construct($conn)
    {
@@ -69,20 +71,85 @@ return $offres;
 }
 public function sauvegarder()
 {
-    if ($this->id) {
-        $requete = $this->conn->prepare("UPDATE jobs SET title = ?, description = ? WHERE id = ?");
-        $requete->execute([$this->title, $this->description, $this->id]);
+    if ($_FILES['image']['error'] == 0) {
+        var_dump($_FILES);
+        $uploadDir = "../views/admin/dashboard/img";
+        $uploadFileName = basename($_FILES['image_path']['name']);
+        $uploadFile = $uploadDir . $uploadFileName;
+        move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadFile);
+
+        $imagePathInDatabase = $uploadFileName;
+
+        if ($this->id) {
+            $requete = $this->conn->prepare("UPDATE jobs SET title = ?, description = ?, company = ?, location = ?, status = ?, date_created = ?, image_path = ? WHERE job_id = ?");
+            $requete->bind_param("sssssssi", $this->title, $this->description, $this->company, $this->location, $this->status, $this->date_created, $imagePathInDatabase, $this->id);
+            $requete->execute();
+        } else {
+            $requete = $this->conn->prepare("INSERT INTO jobs (title, description, company, location, status, date_created, image_path) VALUES (?, ?, ?, ?, 'Open', ?, ?)");
+            $requete->bind_param("ssssss", $this->title, $this->description, $this->company, $this->location, $this->date_created, $imagePathInDatabase);
+            $requete->execute();
+            $this->id = $this->conn->insert_id;
+        }
+
+        $requete->close();
+        
+        echo "Chemin complet : " . $uploadFile . "<br>";
     } else {
-        $requete = $this->conn->prepare("INSERT INTO jobs (title, description,company,location,status,date_created) VALUES (?, ?, ?, ?, ?, ?)");
-        $requete->execute([$this->title, $this->description, $this->company, $this->location, $this->status, $this->date_created]);
-        $this->id = $this->conn->insert_id; 
+        echo "Erreur lors du téléchargement du fichier. Code d'erreur : " . $_FILES['image']['error'];
     }
 }
 
+
+
+
+
+public function getOffresById($id) {
+    $req = "SELECT * FROM jobs WHERE job_id = ?";
+    $stmt = $this->conn->prepare($req);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $jobDetails = $result->fetch_assoc();
+
+        // Set job properties
+        $this->id = $jobDetails['job_id'];
+        $this->title = $jobDetails['title'];
+        $this->description = $jobDetails['description'];
+        $this->company = $jobDetails['company'];
+        $this->location = $jobDetails['location'];
+        $this->status = $jobDetails['status'];
+        $this->date_created = $jobDetails['date_created'];
+        $this->image_path = $jobDetails['image_path'];
+
+        return $jobDetails;
+    }
+
+    return null;
+}
+
+
 public function supprimer(){
-    $requette="delete from jobs where job_id =?";
-    $result=$this->conn->query($requette);
+    $requete = "DELETE FROM jobs WHERE job_id = ?";
+    $stmt = $this->conn->prepare($requete);
+    $stmt->bind_param("i", $this->id);
+    $stmt->execute();
+    $stmt->close();
+}
+
+public function search($searchTerm)
+{
+    $stmt = "SELECT * FROM jobs WHERE title LIKE '%$searchTerm%' OR company LIKE '%$searchTerm%' OR location LIKE '%$searchTerm%'";
+    $result = $this->conn->query($stmt);
+
+    $searchResults = [];
     
+    while ($row = $result->fetch_assoc()) {
+        $searchResults[] = $row;
+    }
+
+    return $searchResults;
 }
 
 
