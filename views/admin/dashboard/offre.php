@@ -140,9 +140,10 @@ include_once('../../../database/connection.php');
                             </td>
                             <td class="f_position"><?php echo $offre['candidature_status']; ?></td>
                             
-                            <td class="">
-                                <a href=""><img class="accept_task w-50" src="img/journal-check.svg" alt="icon" ></a>
-                                <a href=""><img class="delet_user w-50" src="img/journal-x.svg" alt="icon"></a>
+                            <td class="flex-container">
+                            <a href="../../../views/candidat/job/gererStatus.php?id=<?php echo $offre['job_id']; ?>&id_user=<?php echo $offre['id']; ?>"><img class="accept_task w-50" src="img/journal-check.svg" alt="icon" ></a>
+
+                                <a href="../../../views/candidat/job/RejectedStatus.php?id=<?php echo $offre['job_id']; ?>&id_user=<?php echo $offre['id']; ?>"><img class="delet_user w-50" src="img/journal-x.svg" alt="icon"></a>
                             </td>
                         </tr>
                         <?php 

@@ -4,6 +4,7 @@ class Candidature
 {
     private $conn;
 
+
     public function __construct($conn)
     {
         $this->conn = $conn;
@@ -11,20 +12,31 @@ class Candidature
 
     public function saveApplication($jobId, $userId)
     {
-        $checkSql = "SELECT * FROM candidature WHERE job_id = ? AND user_id = ?";
+        $status = null;
+        $checkSql = "SELECT candidature_status FROM candidature WHERE job_id = ? AND user_id = ?";
         $checkStmt = $this->conn->prepare($checkSql);
-        $checkStmt->execute([$jobId, $userId]);
-
-        $existingApplication = $checkStmt->fetch();
-
-        if ($existingApplication) {
-            $this->redirectAndExit("You have already applied for this job!");
+        $checkStmt->bind_param("ii", $jobId, $userId);
+        $checkStmt->execute();
+        $checkStmt->bind_result($status);
+    
+       
+       
+    
+        if ($checkStmt->fetch()) {
+            if ($status === 'Rejected') {
+                $this->redirectAndExit("You have already applied for this job and it has been rejected.");
+            } elseif ($status === 'Approved') {
+                $this->redirectAndExit("You have already applied for this job and it has been approved.");
+            } elseif ($status === 'Pending') {
+                $this->redirectAndExit("You have already applied for this job and it is still pending.");
+            }
         } else {
             $checkStmt->close();
-
-            $insertSql = "INSERT INTO candidature (job_id, user_id) VALUES (?, ?)";
+    
+            // L'utilisateur n'a pas encore postulé, nous pouvons procéder à l'insertion
+            $insertSql = "INSERT INTO candidature (job_id, user_id, candidature_status) VALUES (?, ?, 'Pending')";
             $insertStmt = $this->conn->prepare($insertSql);
-
+    
             if ($insertStmt->execute([$jobId, $userId])) {
                 $this->redirectAndExit("You have successfully applied to this job!");
             } else {
@@ -32,6 +44,10 @@ class Candidature
             }
         }
     }
+    
+    
+
+    
 
     public function getOffresPostuler(){
         $offres=array();
@@ -56,6 +72,27 @@ class Candidature
         echo '</script>';
         exit();
     }
+
+    public function updateStatus($jobId, $userId, $status)
+    {
+        $updateSql = "UPDATE candidature SET candidature_status = ? WHERE job_id = ? AND user_id = ?";
+        $updateStmt = $this->conn->prepare($updateSql);
+    
+        if ($updateStmt->execute([$status, $jobId, $userId])) {
+            echo '<script>';
+            echo 'alert("Candidature status updated successfully!");';
+            echo 'window.location.href = "../../../views/admin/dashboard/offre.php";';
+            echo '</script>';
+        } else {
+            echo '<script>alert("Failed to update candidature status. Please try again.");</script>';
+        }
+    }
+
+
+
+    
+    
+
 }
 
 

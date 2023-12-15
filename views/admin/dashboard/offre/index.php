@@ -237,7 +237,7 @@ require_once('../../../../models/job.php');
 						</div>
                         <div class="form-group">
 							<label>Image </label>
-							<input type="file" class="form-control" name="image_path" >
+							<input type="file" class="form-control" name="image_path" accept="image/*" >
 						</div>
 
 

@@ -1,3 +1,106 @@
+<?php
+
+include_once('../../../database/connection.php');
+include('../../../models/job.php');
+function getTotalOffres($conn) {
+    $offreCountQuery = "SELECT COUNT(*) as total_offres FROM jobs";
+    $offreCountStmt = $conn->prepare($offreCountQuery);
+    
+    if ($offreCountStmt) {
+        $offreCountStmt->execute();
+        $offreCountResult = $offreCountStmt->get_result();
+
+        if ($offreCountResult) {
+            $offreData = $offreCountResult->fetch_assoc();
+            return $offreData['total_offres'];
+        }
+    }
+
+    return 0;
+}
+
+function getTotalOffresApproved($conn) {
+    $offreCountQuery = "SELECT COUNT(*) as total_offre_approved from candidature where candidature_status='Approved'";
+    $offreCountStmt = $conn->prepare($offreCountQuery);
+    
+    if ($offreCountStmt) {
+        $offreCountStmt->execute();
+        $offreCountResult = $offreCountStmt->get_result();
+
+        if ($offreCountResult) {
+            $offreDataApproved = $offreCountResult->fetch_assoc();
+            return $offreDataApproved['total_offre_approved'];
+        }
+    }
+
+    return 0;
+}
+function getTotalOffresRejected($conn) {
+    $offreCountQuery = "SELECT COUNT(*) as total_offre_Rejected from candidature where candidature_status='Rejected'";
+    $offreCountStmt = $conn->prepare($offreCountQuery);
+    
+    if ($offreCountStmt) {
+        $offreCountStmt->execute();
+        $offreCountResult = $offreCountStmt->get_result();
+
+        if ($offreCountResult) {
+            $offreDataARejected = $offreCountResult->fetch_assoc();
+            return $offreDataARejected['total_offre_Rejected'];
+        }
+    }
+
+    return 0;
+}
+
+function getTotalOffresAttentes($conn) {
+    $offreCountQuery = "SELECT COUNT(*) as total_offre_Pending from candidature where candidature_status='Pending'";
+    $offreCountStmt = $conn->prepare($offreCountQuery);
+    
+    if ($offreCountStmt) {
+        $offreCountStmt->execute();
+        $offreCountResult = $offreCountStmt->get_result();
+
+        if ($offreCountResult) {
+            $offreDataPending = $offreCountResult->fetch_assoc();
+            return $offreDataPending['total_offre_Pending'];
+        }
+    }
+
+    return 0;
+}
+
+if (function_exists('getTotalOffresApproved')) {
+   
+    $totalOffresApproved = getTotalOffresApproved($conn);
+} else {
+   
+    $totalOffresApproved = 0;
+}
+
+if (function_exists('getTotalOffres')) {
+   
+    $totalOffres = getTotalOffres($conn);
+} else {
+   
+    $totalOffres = 0;
+}
+
+if (function_exists('getTotalOffresRejected')) {
+   
+    $totalOffresRejected = getTotalOffresRejected($conn);
+} else {
+   
+    $totalOffresRejected = 0;
+}
+
+if (function_exists('getTotalOffresAttentes')) {
+   
+    $totalOffresPending = getTotalOffresAttentes($conn);
+} else {
+   
+    $totalOffresPending = 0;
+}
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -108,7 +211,7 @@
                                     <div>
                                         <p class="mb-0">Offres</p>
                                         <div class="mt-4">
-                                            <h3><strong>18</strong></h3>
+                                            <h3><strong><?php echo $totalOffres; ?></strong></h3>
                                             
                                         </div>
                                     </div>
@@ -125,9 +228,9 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between px-md-1">
                                     <div>
-                                        <p class="mb-0">Active Offres</p>
+                                        <p class="mb-0">Les Offres en attentes</p>
                                         <div class="mt-4">
-                                            <h3><strong>132</strong></h3>
+                                            <h3><strong><?php echo $totalOffresPending; ?></strong></h3>
                                            
                                         </div>
                                     </div>
@@ -144,9 +247,9 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between px-md-1">
                                     <div>
-                                        <p class="mb-0">Nombre visiteurs</p>
+                                        <p class="mb-0">Les Offres rejetées</p>
                                         <div class="mt-4">
-                                            <h3><strong>12</strong></h3>
+                                            <h3><strong><?php echo $totalOffresRejected; ?></strong></h3>
                                             <!-- <p><strong></strong> Completed</p> -->
                                         </div>
                                     </div>
@@ -163,10 +266,9 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between px-md-1">
                                     <div>
-                                        <p class="mb-0">Offres approuver</p>
+                                        <p class="mb-0">Les Offres approuvées</p>
                                         <div class="mt-4">
-                                            <h3><strong>76%</strong></h3>
-                                            <p><strong>57%</strong> Completed</p>
+                                            <h3><strong><?php echo $totalOffresApproved; ?></strong></h3>
                                         </div>
                                     </div>
                                     <div class="">

@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $user->setUsername($_POST['username']);
   $user->setEmail($_POST['email']);
   $user->setPassword($_POST['password']);
-  $user->setRoleName('condidat');
+  $user->setRoleName('candidat');
   $confirmPassword = $_POST['confirm_password'];
 
   if ($user->isUsernameTaken()) {

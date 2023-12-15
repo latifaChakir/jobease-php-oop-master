@@ -71,11 +71,13 @@ return $offres;
 }
 public function sauvegarder()
 {
-    if ($_FILES['image']['error'] == 0) {
-        var_dump($_FILES);
-        $uploadDir = "../views/admin/dashboard/img";
-        $uploadFileName = basename($_FILES['image_path']['name']);
+    $uploadDir = __DIR__ . "/../views/admin/dashboard/img/";
+
+    if (is_uploaded_file($_FILES['image_path']['tmp_name'])) {
+
+        $uploadFileName = uniqid() . basename($_FILES['image_path']['name']);
         $uploadFile = $uploadDir . $uploadFileName;
+
         move_uploaded_file($_FILES['image_path']['tmp_name'], $uploadFile);
 
         $imagePathInDatabase = $uploadFileName;
@@ -86,20 +88,18 @@ public function sauvegarder()
             $requete->execute();
         } else {
             $requete = $this->conn->prepare("INSERT INTO jobs (title, description, company, location, status, date_created, image_path) VALUES (?, ?, ?, ?, 'Open', ?, ?)");
-            $requete->bind_param("ssssss", $this->title, $this->description, $this->company, $this->location, $this->date_created, $imagePathInDatabase);
+            $requete->bind_param("ssssss", $this->title, $this->description, $this->company, $this->location, $this->date_created,$imagePathInDatabase);
             $requete->execute();
             $this->id = $this->conn->insert_id;
         }
 
         $requete->close();
-        
+
         echo "Chemin complet : " . $uploadFile . "<br>";
     } else {
-        echo "Erreur lors du téléchargement du fichier. Code d'erreur : " . $_FILES['image']['error'];
+        echo "Erreur lors du téléchargement du fichier. Code d'erreur : " . $_FILES['image_path']['error'];
     }
 }
-
-
 
 
 
@@ -113,7 +113,6 @@ public function getOffresById($id) {
     if ($result->num_rows > 0) {
         $jobDetails = $result->fetch_assoc();
 
-        // Set job properties
         $this->id = $jobDetails['job_id'];
         $this->title = $jobDetails['title'];
         $this->description = $jobDetails['description'];
@@ -153,6 +152,22 @@ public function search($searchTerm)
 }
 
 
+function getTotalOffres($conn) {
+    $offreCountQuery = "SELECT COUNT(*) as total_offres FROM jobs";
+    $offreCountStmt = $conn->prepare($offreCountQuery);
+    
+    if ($offreCountStmt) {
+        $offreCountStmt->execute();
+        $offreCountResult = $offreCountStmt->get_result();
+
+        if ($offreCountResult) {
+            $offreData = $offreCountResult->fetch_assoc();
+            return $offreData['total_offres'];
+        }
+    }
+
+    return 0;
+}
 
 
 }
