@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if ($_SESSION['role'] !== 'admin') {
+    header("Location:../../../public/index.php "); 
+    exit();
+}
 
 include_once('../../../database/connection.php');
 include('../../../models/job.php');

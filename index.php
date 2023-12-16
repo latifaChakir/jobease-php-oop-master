@@ -1,7 +1,7 @@
 
 <?php
-include_once('../database/connection.php');
-require_once('../models/job.php');
+include_once('database/connection.php');
+require_once('models/job.php');
 session_start();
 
 
@@ -21,7 +21,7 @@ session_start();
 
 
 
-	<link rel="stylesheet" href="../styles/style.css">
+	<link rel="stylesheet" href="styles/style.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -64,7 +64,7 @@ session_start();
 						</li>
 						<?php if (isset($_SESSION['id'])) { ?>
 						<li class="nav-item">
-							<a class="nav-link" href="../views/candidat/job/notification.php">Notifications</a>
+							<a class="nav-link" href="views/candidat/job/notification.php">Notifications</a>
 							
 						</li>
 						<?php 
@@ -85,9 +85,9 @@ session_start();
 						</span>
 						<li class="nav-item">
 							<?php if (isset($_SESSION['id'])) { ?>
-								<a class="nav-link" href="../views/auth/logout.php">Logout</a>
+								<a class="nav-link" href="views/auth/logout.php">Logout</a>
 							<?php } else { ?>
-								<a class="nav-link" href="../views/auth/login.php">Login</a>
+								<a class="nav-link" href="views/auth/login.php">Login</a>
 							<?php } ?>
 						</li>
 
@@ -139,7 +139,7 @@ session_start();
 				<article class="postcard light green">
 					<a class="postcard__img_link" href="#">
 						<?php
-						$imagePath = "../views/admin/dashboard/img/" . $offre['image_path'];
+						$imagePath = "views/admin/dashboard/img/" . $offre['image_path'];
 						?>
 						<img class="postcard__img" src="<?php echo $imagePath; ?>" alt="Image Title" />
 					</a>
@@ -164,7 +164,7 @@ session_start();
 							<li class="tag__item"><i class="fas fa-clock mr-2"></i>55 mins.</li>
 							<li class="tag__item play green">
 								<a
-									href="<?php echo isset($_SESSION['id']) ? '../views/candidat/job/offre.php?id=' . $offre['job_id'] : '../views/auth/login.php'; ?>">
+									href="<?php echo isset($_SESSION['id']) ? 'views/candidat/job/offre.php?id=' . $offre['job_id'] : 'views/auth/login.php'; ?>">
 									<i class="fas fa-play mr-2"></i>
 									<?php echo isset($_SESSION['id']) ? 'POSTULER' : 'APPLY NOW'; ?>
 								</a>

@@ -1,9 +1,32 @@
 <?php
+class Database{
+    public $conn;
+    private $servername;
+    private $username;
+    private $password;
+    private $dbname;
+    public function __construct($servername,$username,$password,$dbname){
+        $this->servername=$servername;
+        $this->username=$username;
+        $this->password=$password;
+        $this->dbname=$dbname;
+        $this->conn=new mysqli($this->servername,$this->username,$this->password,$this->dbname);
+        if(!$this->conn){
+            die("error!".mysqli_error($this->conn));
 
-class Candidature
+        }
+
+    }
+    public function getConnection() {
+        return $this->conn;
+    }
+
+}
+$database = new Database('localhost', 'root', '', 'jobeasy');
+$conn = $database->getConnection();
+
+class Candidature extends Database
 {
-    private $conn;
-
 
     public function __construct($conn)
     {
@@ -33,7 +56,7 @@ class Candidature
         } else {
             $checkStmt->close();
     
-            // L'utilisateur n'a pas encore postulé, nous pouvons procéder à l'insertion
+            // L'utilisateur n'a pas encore postulé
             $insertSql = "INSERT INTO candidature (job_id, user_id, candidature_status) VALUES (?, ?, 'Pending')";
             $insertStmt = $this->conn->prepare($insertSql);
     
@@ -44,9 +67,6 @@ class Candidature
             }
         }
     }
-    
-    
-
     
 
     public function getOffresPostuler(){
@@ -75,18 +95,74 @@ class Candidature
 
     public function updateStatus($jobId, $userId, $status)
     {
-        $updateSql = "UPDATE candidature SET candidature_status = ? WHERE job_id = ? AND user_id = ?";
-        $updateStmt = $this->conn->prepare($updateSql);
+        // Récupérer le titre de l'offre
+        $getJobTitleSql = "SELECT jobs.title FROM candidature
+                           JOIN jobs ON candidature.job_id = jobs.job_id
+                           WHERE candidature.job_id = ? AND candidature.user_id = ?";
+        $getJobTitleStmt = $this->conn->prepare($getJobTitleSql);
+        $getJobTitleStmt->execute([$jobId, $userId]);
+        $jobTitleResult = $getJobTitleStmt->get_result();
     
-        if ($updateStmt->execute([$status, $jobId, $userId])) {
+        if ($jobTitleRow = $jobTitleResult->fetch_assoc()) {
+            $jobTitle = $jobTitleRow['title'];
+    
+            $updateSql = "UPDATE candidature SET candidature_status = ? WHERE job_id = ? AND user_id = ?";
+            $updateStmt = $this->conn->prepare($updateSql);
+    
+            if (!$updateStmt->execute([$status, $jobId, $userId])) {
+                echo '<script>alert("Failed to update candidature status. Please try again.");</script>';
+                return;
+            }
+    
+            $notificationMessage = "Le statut de votre candidature pour l'offre \"$jobTitle\" a été mis à jour: $status";
+            $insertNotificationSql = "INSERT INTO notifications (user_id, message) VALUES (?, ?)";
+            $insertNotificationStmt = $this->conn->prepare($insertNotificationSql);
+    
+            if (!$insertNotificationStmt->execute([$userId, $notificationMessage])) {
+                echo '<script>alert("Failed to insert notification. Please try again.");</script>';
+                return;
+            }
+    
             echo '<script>';
             echo 'alert("Candidature status updated successfully!");';
             echo 'window.location.href = "../../../views/admin/dashboard/offre.php";';
             echo '</script>';
         } else {
-            echo '<script>alert("Failed to update candidature status. Please try again.");</script>';
+            echo '<script>alert("Failed to retrieve job title. Please try again.");</script>';
         }
     }
+    
+
+
+ 
+
+
+    public function getNotificationsForUser($userId)
+    {
+        $notifications = array();
+    
+        $selectNotificationsSql = "SELECT * FROM notifications WHERE user_id = ?";
+        $selectNotificationsStmt = $this->conn->prepare($selectNotificationsSql);
+        $selectNotificationsStmt->bind_param("i", $userId);
+        
+        if ($selectNotificationsStmt->execute()) {
+            $result = $selectNotificationsStmt->get_result();
+    
+            while ($array = $result->fetch_assoc()) {
+                $notifications[] = $array;
+            }
+    
+            $selectNotificationsStmt->close();
+        } else {
+            echo '<script>alert("Failed to retrieve notifications. Please try again.");</script>';
+        }
+    
+        return $notifications;
+    }
+    
+
+
+    
 
 
 

@@ -1,5 +1,4 @@
 <?php
-include('../../../database/connection.php');
 include('postuler.php');
 session_start();
 

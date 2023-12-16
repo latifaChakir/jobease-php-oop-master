@@ -87,8 +87,8 @@ public function sauvegarder()
             $requete->bind_param("sssssssi", $this->title, $this->description, $this->company, $this->location, $this->status, $this->date_created, $imagePathInDatabase, $this->id);
             $requete->execute();
         } else {
-            $requete = $this->conn->prepare("INSERT INTO jobs (title, description, company, location, status, date_created, image_path) VALUES (?, ?, ?, ?, 'Open', ?, ?)");
-            $requete->bind_param("ssssss", $this->title, $this->description, $this->company, $this->location, $this->date_created,$imagePathInDatabase);
+            $requete = $this->conn->prepare("INSERT INTO jobs (title, description, company, location, status, date_created, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $requete->bind_param("sssssss", $this->title, $this->description, $this->company, $this->location, $this->status,$this->date_created,$imagePathInDatabase);
             $requete->execute();
             $this->id = $this->conn->insert_id;
         }
@@ -139,7 +139,7 @@ public function supprimer(){
 
 public function search($searchTerm)
 {
-    $stmt = "SELECT * FROM jobs WHERE title LIKE '%$searchTerm%' OR company LIKE '%$searchTerm%' OR location LIKE '%$searchTerm%'";
+    $stmt = "SELECT * FROM jobs WHERE (title LIKE  '%$searchTerm%' OR company LIKE '%$searchTerm%' OR location LIKE '%$searchTerm%' ) AND status='Open'";
     $result = $this->conn->query($stmt);
 
     $searchResults = [];

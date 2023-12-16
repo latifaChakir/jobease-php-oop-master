@@ -79,6 +79,8 @@ public function insertUser() {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         $_SESSION['id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role_name'];
         $hashedPassword = $user['password'];
 
         if (password_verify($password, $hashedPassword)) {

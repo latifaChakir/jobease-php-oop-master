@@ -1,7 +1,13 @@
 <?php
 include_once('../../../../database/connection.php');
 require_once('../../../../models/job.php');
-?>
+
+session_start();
+
+if ($_SESSION['role'] !== 'admin') {
+    header("Location:../../../public/index.php "); 
+    exit();
+}?>
 
 <!DOCTYPE html>
 <html lang="en">
