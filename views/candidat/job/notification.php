@@ -80,7 +80,7 @@ if (isset($_SESSION["id"])) {
                 </span>
                 <li class="nav-item">
                     <?php if (isset($_SESSION['id'])) { ?>
-                        <a class="nav-link" href="../views/auth/logout.php">Logout</a>
+                        <a class="nav-link" href="../../auth/logout.php">Logout</a>
                     <?php } else { ?>
                         <a class="nav-link" href="../views/auth/login.php">Login</a>
                     <?php } ?>

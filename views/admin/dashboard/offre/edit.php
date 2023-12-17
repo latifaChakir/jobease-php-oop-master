@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="d-flex w-100 justify-content-center">
                 <button type="submit" class="btn btn-success btn-block mb-4 me-4 save">Save Edit</button>
-                <div class="btn btn-danger btn-block mb-4 annuler">Annuler</div>
+                <a href="index.php"><div class="btn btn-danger btn-block mb-4 annuler">Annuler</div></a>
             </div>
         </form>
     </div>
